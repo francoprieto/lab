@@ -8,7 +8,7 @@ docker-compose up -d
 
 # Comprobación
 
-Ingresar a la url: http://localhost:8888
+Ingresar a la url: http://localhost:9090
 
 El jenkins va a solicitar una contraseña inicial para desbloquear, la cual se encuentra en:
  ```console
@@ -46,4 +46,4 @@ El resultado debería ser una contraseña parecida a esta:
 
 * Seguidamente se va a descargar e instalar los plugins básicos
 
-* Al terminar nos pedirá que definamos las credenciales para el usuario administrador y el URL del jenkins, se recomienda dejar http://localhost:8888
+* Al terminar nos pedirá que definamos las credenciales para el usuario administrador y el URL del jenkins, se recomienda dejar http://localhost:9090
