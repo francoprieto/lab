@@ -1,5 +1,7 @@
 # Instalación e iniciación
 
+- Prerequisitos: tener instalado docker (o podman) y docker-compose
+
 ```console
 docker-compose up -d
 ```
@@ -47,3 +49,24 @@ El resultado debería ser una contraseña parecida a esta:
 * Seguidamente se va a descargar e instalar los plugins básicos
 
 * Al terminar nos pedirá que definamos las credenciales para el usuario administrador y el URL del jenkins, se recomienda dejar http://localhost:9090
+
+# Configuración de pipeline
+
+- Ingresar al jenkins
+- Hacer click en new-item
+- Definir un nombre y luego seleccionar el tipo "Pipeline"
+- En configuracion poner lo siguiente:
+    - Marcar "Github Project" y definir en Project url: https://github.com/francoprieto/lab/
+    - En "Definition" seleccionar "Pipeline from SCM"
+    - En "Repository URL" cargar: https://github.com/francoprieto/lab/
+    - En branch specifier dejar en: */main
+    - En script path, poner: semana7/pipeline
+    - Finalmente hacer click en apply y save
+
+- Se puede probar con el boton "Build Now"
+
+- Para determinar si realizó correctamente visite:
+http://localhost:9090/test/
+
+Debe salir 
+"HOLA LAB!"
