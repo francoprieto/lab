@@ -1,0 +1,46 @@
+pipeline {
+    agent any   // se ejecuta en cualquier agente disponible
+
+    stages {
+
+     stage('Instalando Docker-cli'){
+          steps{
+                script {
+                    sh 'apt-get install -y docker.io'
+                }
+          }
+       }
+
+        stage('Checkout') {
+            steps {
+                // Clona el repositorio desde GitHub
+                git branch: 'main',
+                    url: 'https://github.com/francoprieto/lab.git'
+            }
+        }
+
+       stage('Run Nginx') {
+            steps {
+                script {
+
+                    sh 'cd semana7'
+
+                    sh '''
+                        DOCKER_HOST=tcp://docker:2375 \
+                        DOCKER_TLS_VERIFY= \
+                        DOCKER_CERT_PATH= \
+                        DOCKER_HOST=tcp://docker:2375 \
+                        docker rm -f pipeline-nginx || true
+                    '''
+
+                    sh '''
+                        DOCKER_HOST=tcp://docker:2375 \
+                        DOCKER_TLS_VERIFY= \
+                        DOCKER_CERT_PATH= \
+                        docker run -it -v "${pwd}/html:/usr/share/nginx/html/" -d --name pipeline-nginx -p 9999:80 nginx:alpine
+                    '''
+                }
+            }
+        }
+    }
+}
