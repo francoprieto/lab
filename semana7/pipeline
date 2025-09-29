@@ -35,9 +35,15 @@ pipeline {
                         DOCKER_HOST=tcp://docker:2375 \
                         DOCKER_TLS_VERIFY= \
                         DOCKER_CERT_PATH= \
-                        ls -la $WORKSPACE/semana7/test/
+                        docker run -d --name pipeline-nginx -p 9999:80 nginx:alpine
                     '''
-                    //docker run -v $WORKSPACE/semana7/test/:/usr/share/nginx/html/test/ -d --name pipeline-nginx -p 9999:80 nginx:alpine
+
+                    sh '''
+                        DOCKER_HOST=tcp://docker:2375 \
+                        DOCKER_TLS_VERIFY= \
+                        DOCKER_CERT_PATH= \
+                        docker cp  $WORKSPACE/semana7/test/ pipeline-nginx:/usr/share/nginx/html/test
+                    '''
 
                 }
             }
