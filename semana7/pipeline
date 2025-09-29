@@ -37,8 +37,11 @@ pipeline {
                         DOCKER_HOST=tcp://docker:2375 \
                         DOCKER_TLS_VERIFY= \
                         DOCKER_CERT_PATH= \
-                        docker run -it -v "${pwd}/html:/usr/share/nginx/html/" -d --name pipeline-nginx -p 9999:80 nginx:alpine
+                        docker build -t test-nginx . \
+                        docker run -it test-nginx -p 9999:80
                     '''
+
+                    //docker run -d --name pipeline-nginx -p 9999:80 nginx:alpine
                 }
             }
         }
