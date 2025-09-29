@@ -23,8 +23,6 @@ pipeline {
             steps {
                 script {
 
-                    sh 'cd semana7'
-
                     sh '''
                         DOCKER_HOST=tcp://docker:2375 \
                         DOCKER_TLS_VERIFY= \
@@ -37,11 +35,10 @@ pipeline {
                         DOCKER_HOST=tcp://docker:2375 \
                         DOCKER_TLS_VERIFY= \
                         DOCKER_CERT_PATH= \
-                        docker build -t test-nginx . \
-                        docker run -it test-nginx -p 9999:80
+                        ls -la $WORKSPACE/semana7/test/
                     '''
+                    //docker run -v $WORKSPACE/semana7/test/:/usr/share/nginx/html/test/ -d --name pipeline-nginx -p 9999:80 nginx:alpine
 
-                    //docker run -d --name pipeline-nginx -p 9999:80 nginx:alpine
                 }
             }
         }
