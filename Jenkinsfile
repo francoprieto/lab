@@ -4,9 +4,9 @@ node {
         git 'https://github.com/digininja/DVWA.git'
     }
     stage('Build') {
-        sh 'echo "build"'
+        sh 'cd DVWA'
     }
     stage('Results') {
-        sh 'echo "result"'
+        sh 'ls -la'
     }
 }
