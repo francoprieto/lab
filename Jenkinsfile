@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11-slim'
+            args '-u root'
+        }
+    }
 
     environment {
         PROJECT_DIR = "pygoat"
@@ -15,12 +20,10 @@ pipeline {
             }
         }
 
-        stage('Configurar entorno Python') {
+        stage('Instalar Safety CLI') {
             steps {
-                echo '🐍 Configurando entorno Python y Safety CLI...'
+                echo '🐍 Instalando Safety CLI...'
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
                     pip install --upgrade pip
                     pip install safety
                 '''
@@ -32,7 +35,6 @@ pipeline {
                 echo '📚 Instalando dependencias del proyecto...'
                 dir("${PROJECT_DIR}") {
                     sh '''
-                        . ../venv/bin/activate
                         pip install -r requirements.txt || true
                     '''
                 }
@@ -44,7 +46,6 @@ pipeline {
                 echo '🔍 Ejecutando escaneo con Safety...'
                 dir("${PROJECT_DIR}") {
                     sh '''
-                        . ../venv/bin/activate
                         safety check --full-report --json > ../${RESULT_FILE} || true
                     '''
                 }
