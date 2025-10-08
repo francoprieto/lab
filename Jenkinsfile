@@ -2,38 +2,50 @@ pipeline {
     agent any
 
     environment {
-        // Puedes definir tu token de autenticación aquí si usas Safe CLI o Snyk
-        // SAFE_TOKEN = credentials('safe-cli-token')
         PROJECT_DIR = "pygoat"
-        RESULT_FILE = "resultado.json"
+        RESULT_FILE = "safety_scan_result.json"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Clonando el repositorio pygoat...'
+                echo '📦 Clonando el repositorio pygoat...'
                 sh 'rm -rf pygoat || true'
                 sh 'git clone https://github.com/adeyosemanputra/pygoat.git'
             }
         }
 
-        stage('Instalar Safe CLI') {
+        stage('Configurar entorno Python') {
             steps {
-                echo 'Instalando Safe CLI...'
-                // Dependiendo del entorno, puede ser npm, pip, o binario directo
+                echo '🐍 Configurando entorno Python y Safety CLI...'
                 sh '''
-                    curl -sL https://downloads.safeci.io/install.sh | bash
-                    safety --version
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install safety
                 '''
             }
         }
 
-        stage('Escanear Código') {
+        stage('Instalar dependencias del proyecto') {
             steps {
-                echo 'Ejecutando escaneo de seguridad...'
+                echo '📚 Instalando dependencias del proyecto...'
                 dir("${PROJECT_DIR}") {
                     sh '''
-                        safe scan . --json > ../${RESULT_FILE} || true
+                        . ../venv/bin/activate
+                        pip install -r requirements.txt || true
+                    '''
+                }
+            }
+        }
+
+        stage('Escanear con Safety CLI') {
+            steps {
+                echo '🔍 Ejecutando escaneo con Safety...'
+                dir("${PROJECT_DIR}") {
+                    sh '''
+                        . ../venv/bin/activate
+                        safety check --full-report --json > ../${RESULT_FILE} || true
                     '''
                 }
             }
@@ -41,7 +53,7 @@ pipeline {
 
         stage('Guardar Resultados') {
             steps {
-                echo 'Guardando resultados del escaneo...'
+                echo '💾 Guardando resultados del escaneo...'
                 archiveArtifacts artifacts: "${RESULT_FILE}", fingerprint: true
             }
         }
@@ -49,7 +61,7 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline finalizado.'
+            echo '✅ Pipeline finalizado.'
             sh 'ls -l'
         }
     }
