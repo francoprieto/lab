@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo '📦 Clonando el repositorio pygoat...'
-                sh 'rm -rf pygoat || true'
+                sh 'rm -rf pygoat'
                 sh 'git clone https://github.com/adeyosemanputra/pygoat.git'
             }
         }
