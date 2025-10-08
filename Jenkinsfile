@@ -23,7 +23,7 @@ pipeline {
                 // Dependiendo del entorno, puede ser npm, pip, o binario directo
                 sh '''
                     curl -sL https://downloads.safeci.io/install.sh | bash
-                    safe --version
+                    safety --version
                 '''
             }
         }
